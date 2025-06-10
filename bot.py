@@ -11,7 +11,7 @@ init(autoreset=True)
 
 CREDENTIALS_FOLDER = "sessions"
 DATA_FILE = "data.json"
-ADMIN_ID = 7335486115
+ADMIN_ID = 7335486115  # Replace with your real Telegram ID
 
 os.makedirs(CREDENTIALS_FOLDER, exist_ok=True)
 
@@ -88,6 +88,12 @@ async def command_handler(client):
     @client.on(events.NewMessage(incoming=True))
     async def handler(event):
         sender = await event.get_sender()
+        
+        # ✅ Fix for 'sender is None' error
+        if sender is None:
+            print(Fore.YELLOW + f"Message with no sender: {event.raw_text}")
+            return
+
         is_private = event.is_private
         is_admin = sender.id == ADMIN_ID
         data = load_data()
